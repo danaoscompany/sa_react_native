@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Button, Alert } from 'react-native';
 import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 
 export default class Test extends Component {
 
@@ -13,20 +14,26 @@ export default class Test extends Component {
 
 	render() {
 		return (
-			<View>
-				<Button
-					title='Show Dialog'
-					onPress={() => {
-						Alert.alert('Select Role', '',
-						[{
-							text: 'Admin',
-							style: 'cancel'
-						},
-						{
-							text: 'Doctor'
-						}])
-					}} />
-			</View>
+			<View style={{ flex: 1 }}>
+	        	<ReactNativeZoomableView
+		    		maxZoom={1.5}
+          			minZoom={0.5}
+          			zoomStep={0.5}
+          			bindToBorders={true}
+          			style={{
+          				position: 'absolute',
+          				left: 0,
+          				top: 0,
+          				width: '100%',
+          				height: '100%',
+            			backgroundColor: 'blue',
+            			justifyContent: 'flex-start',
+            			zoomEnabled: false
+          			}}
+        			>
+        			<View style={{ width: 100, height: 100, backgroundColor: '#00FF00' }} />
+        		</ReactNativeZoomableView>
+      		</View>
 		);
 	}
 }

@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@dudigital/react-native-zoomable-view": "^1.0.15",
     "@pontusab/react-native-image-manipulator": "^1.0.6",
     "@react-native-community/art": "^1.2.0",
     "@react-native-community/async-storage": "^1.12.0",
@@ -26,6 +27,7 @@
     "react": "16.13.1",
     "react-native": "0.63.2",
     "react-native-camera": "^3.39.0",
+    "react-native-canvas": "^0.1.37",
     "react-native-device-info": "^6.0.1",
     "react-native-document-picker": "^3.5.4",
     "react-native-dropbox-sdk": "^0.4.0",
@@ -51,6 +53,7 @@
     "react-native-share": "^3.8.0",
     "react-native-simple-toast": "^1.1.2",
     "react-native-sqlite-storage": "^5.0.0",
+    "react-native-view-shot": "^3.1.2",
     "react-native-webview": "^10.9.0",
     "rnpm": "^1.9.0"
   },

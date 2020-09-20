@@ -7,7 +7,10 @@ import GDrive from "react-native-google-drive-api-wrapper";
 import ProgressDialog from 'react-native-progress-dialog';
 import * as Progress from 'react-native-progress';
 import { RNCamera, FaceDetector } from 'react-native-camera';
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import RNFS from 'react-native-fs';
+import ViewShot from "react-native-view-shot";
+import Canvas from 'react-native-canvas';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import global from '../global.js';
@@ -19,12 +22,14 @@ export default class TakePicture extends Component {
 		this.state = {
 			camera: null,
 			chooseDeviceDialogVisible: false,
+			screenWidth: Dimensions.get('window').width,
+			screenHeight: Dimensions.get('window').height,
 			modalWidth: Dimensions.get('window').width-32-32,
 			dbModalWidth: Dimensions.get('window').width-16-16,
 			dbModalHeight: Dimensions.get('window').height-32-32,
 			progressVisible: false,
 			devices: [],
-			coordinateActive: false,
+			coordinateActive: true,
 			fileName: uniqid()+".jpg",
 			editedFileName: "",
 			fileNameDialogVisible: false,
@@ -40,7 +45,9 @@ export default class TakePicture extends Component {
 			webViewVisible: false,
 			dbAccessTokenURL: '',
 			dbAccessToken: '',
-			currentZoomValue: 0.0
+			currentZoomValue: currentZoomValue,
+			imageVisible: false,
+			imageURI: ''
 		};
 	}
 
@@ -129,8 +136,9 @@ export default class TakePicture extends Component {
 		currentDeviceID = id;
 		currentDeviceUUID = uuid;
 		currentDeviceName = name;
+		currentZoomValue = parseFloat(zoomValue)-1;
 		this.setState({
-			currentZoomValue: parseFloat(zoomValue),
+			currentZoomValue: parseFloat(zoomValue)-1,
 			chooseDeviceDialogVisible: false
 		});
 		log("SELECTED ZOOM VALUE: "+this.state.currentZoomValue);
@@ -154,9 +162,25 @@ export default class TakePicture extends Component {
 			let path = data['uri'];
 			log("SAVED PATH: "+path);
 			this.setState({
-				savedImagePath: path,
-				saveDialogVisible: true
+				imageURI: path,
+				imageVisible: true
 			});
+			setTimeout(() => {
+				this.refs.camera.capture().then(uri => {
+					log("CAPTURED SCREENSHOT URI:");
+					log(uri);
+					RNFS.exists(path).then((exists) => {
+						if (exists) {
+							RNFS.unlink(path);
+						}
+						RNFS.copyFile(uri.replace("file://", ""), path);
+						this.setState({
+							savedImagePath: path,
+							saveDialogVisible: true
+						});
+					});
+    			});
+			}, 2000).bind(this);
 		} else {
 			log("CAMERA OBJECT NOT EXISTS");
 		}
@@ -513,6 +537,17 @@ export default class TakePicture extends Component {
 			});
 		}
 	}
+	
+	handleCanvas = (canvas) => {
+		log("SCREEN WIDTH: "+this.state.screenWidth);
+		log("SCREEN HEIGHT: "+this.state.screenHeight);
+		try {
+	    	const ctx = canvas.getContext('2d');
+    		ctx.fillStyle = '#FFFFFF';
+    		ctx.fillRect(100, 0, 1, 200);
+    		ctx.fillRect(0, 100, 200, 1);
+    	} catch (e) {}
+  	}
 
 	render() {
 		return (
@@ -523,9 +558,16 @@ export default class TakePicture extends Component {
 					}}
 					style={{ flex: 1 }}
 					type={RNCamera.Constants.Type.back}
-					flashMode={RNCamera.Constants.FlashMode.on}
-					zoom={this.state.currentZoomValue}
-					/ >
+					flashMode={RNCamera.Constants.FlashMode.off}
+					zoom={this.state.currentZoomValue} />
+				{ this.state.coordinateActive &&
+				<View style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', alignItems: 'center',
+					transform: [{ scale: 1+this.state.currentZoomValue }] }}>
+					<View style={{ width: 352, height: 352, marginTop: 0 }}>
+						<Image source={require('../assets/images/coordinate.png')} style={{ width: '100%', height: '100%' }} />
+					</View>
+				</View>
+				}
 				<View style={{ position: 'absolute', left: 0, bottom: 32, alignItems: 'center', width: '100%' }}>
 					<TouchableOpacity style={{ width: 40, height: 40 }}
 						onPress={() => {
@@ -675,7 +717,10 @@ export default class TakePicture extends Component {
 				<Modal animationType="fade" transparent={true} visible={this.state.saveDialogVisible}>
 					<TouchableOpacity style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#00000055' }}
 						onPress={() => {
-							this.setState({saveDialogVisible: false});
+							this.setState({
+								saveDialogVisible: false,
+								imageVisible: false
+							});
 						}}>
 						<View style={{ width: this.state.modalWidth, marginLeft: 32, marginRight: 32, shadowColor: '#000000',
 							shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.27, shadowRadius: 4.65, elevation: 6, backgroundColor: '#FFFFFF',
@@ -741,7 +786,8 @@ export default class TakePicture extends Component {
 								<TouchableOpacity style={{ height: 40, justifyContent: 'center', alignItems: 'center' }}
 									onPress={() => {
 										this.setState({
-											saveDialogVisible: false
+											saveDialogVisible: false,
+											imageVisible: false
 										});
 									}}>
 									<Text style={{ color: flatBlue, fontWeight: 'bold', fontSize: 15 }}>Cancel</Text>
@@ -749,7 +795,8 @@ export default class TakePicture extends Component {
 								<TouchableOpacity style={{ height: 40, justifyContent: 'center', alignItems: 'center', marginLeft: 8 }}
 									onPress={() => {
 										this.setState({
-											saveDialogVisible: false
+											saveDialogVisible: false,
+											imageVisible: false
 										});
 										this.save();
 									}}>
@@ -784,6 +831,20 @@ export default class TakePicture extends Component {
     				</View>
     			</Modal>
 				<ProgressDialog label='Loading...' visible={this.state.progressVisible} />
+				{ this.state.imageVisible &&
+				<ViewShot ref='camera' options={{ format: "jpg", quality: 1.0 }} style={{ flex: 1, width: '100%', height: '100%',
+					position: 'absolute', left: 0, top: 0 }}>
+					<Image source={{ uri: this.state.imageURI }} style={{ width: '100%', height: '100%' }} />
+					{ this.state.coordinateActive &&
+					<View style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', alignItems: 'center',
+						transform: [{ scale: 1+this.state.currentZoomValue }] }}>
+						<View style={{ width: 352, height: 352, marginTop: 0 }}>
+							<Image source={require('../assets/images/coordinate.png')} style={{ width: '100%', height: '100%' }} />
+						</View>
+					</View>
+					}
+				</ViewShot>
+				}
 			</View>
 		);
 	}

@@ -10,8 +10,9 @@ global.lightBlue = "#64A6FC";
 global.flatBlue = "#3498db";
 global.userID = 0;
 global.PROTOCOL = "http://";
-global.HOST = "192.168.43.182";
-global.API_URL = PROTOCOL+HOST+"/sa";
+//global.HOST = "192.168.43.182";
+global.HOST = "admin.skinmed.id";
+global.API_URL = PROTOCOL+HOST+"";
 global.mark = null;
 global.share = null;
 global.deleteImage = null;
@@ -48,6 +49,7 @@ global.currentPatientName = "";
 global.currentDeviceID = "";
 global.currentDeviceUUID = "";
 global.currentDeviceName = "";
+global.currentZoomValue = 0.0;
 global.uniqid = function() {
     var ts = String(new Date().getTime()), i = 0, out = '';
     for(i=0;i<ts.length;i+=2) {

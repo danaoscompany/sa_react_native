@@ -741,6 +741,13 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@dudigital/react-native-zoomable-view@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@dudigital/react-native-zoomable-view/-/react-native-zoomable-view-1.0.15.tgz#d49cc14f979a4db41719ee2c13b7c91268212936"
+  integrity sha512-Fctft/GmGtEqBC7bLvD0oiqOvPq+NVgLyu9XZWqlMNFqVE2XoJAs9ADrTDMDxdEc4L5ZVNc39D3Bh5CLbVJ3VQ==
+  dependencies:
+    prop-types "^15.5.10"
+
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
@@ -2477,6 +2484,11 @@ cssstyle@^2.0.0:
   integrity sha512-AZL67abkUzIuvcHqk7c09cezpGNcxUxU4Ioi/05xHk4DQeTkWmGYftIE6ctU6AEt+Gn4n1lDStOtj7FKycP71A==
   dependencies:
     cssom "~0.3.6"
+
+ctx-polyfill@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/ctx-polyfill/-/ctx-polyfill-1.1.4.tgz#08420bc5c540d08ac36d05720ca503c65e302d65"
+  integrity sha1-CEILxcVA0IrDbQVyDKUDxl4wLWU=
 
 dashdash@^1.12.0:
   version "1.14.1"
@@ -6240,6 +6252,13 @@ react-native-camera@^3.39.0:
   dependencies:
     prop-types "^15.6.2"
 
+react-native-canvas@^0.1.37:
+  version "0.1.37"
+  resolved "https://registry.yarnpkg.com/react-native-canvas/-/react-native-canvas-0.1.37.tgz#62381f685effcd3263d10f13b4174a8c5b533dcf"
+  integrity sha512-8W3YlS9WoxQeyK7/fjzlVIOcAqigE5pscn9xoU7rSYyzOJ69h5LjDlytjgZ6i7G7KqCRTarVIYJL8dAuER1OVQ==
+  dependencies:
+    ctx-polyfill "^1.1.4"
+
 react-native-device-info@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-6.0.1.tgz#4aae636cd826e9ab53c0db68bb3baec86f81890f"
@@ -6429,6 +6448,11 @@ react-native-vector-icons@^4.2.0:
     lodash "^4.0.0"
     prop-types "^15.5.10"
     yargs "^8.0.2"
+
+react-native-view-shot@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-view-shot/-/react-native-view-shot-3.1.2.tgz#8c8e84c67a4bc8b603e697dbbd59dbc9b4f84825"
+  integrity sha512-9u9fPtp6a52UMoZ/UCPrCjKZk8tnkI9To0Eh6yYnLKFEGkRZ7Chm6DqwDJbYJHeZrheCCopaD5oEOnRqhF4L2Q==
 
 react-native-webview@^10.9.0:
   version "10.9.0"
